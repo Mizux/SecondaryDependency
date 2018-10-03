@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(SecondDependency VERSION 1.0 LANGUAGES NONE)
+project(SecondaryDependency VERSION 1.0 LANGUAGES NONE)
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
