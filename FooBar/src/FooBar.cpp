@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <foo/Foo.hpp>
-#include <bar/Bar.hpp>
 
 namespace foobar {
   void fooBarHello() {
@@ -11,8 +10,7 @@ namespace foobar {
 
 void FooBar::operator()() const {
 	foo::Foo foo;
-	bar::Bar bar;
-	std::cout << foo() << bar() << std::endl;
+	std::cout << foo() << std::endl;
 }
 }
 
