@@ -3,12 +3,9 @@
 #include <iostream>
 
 namespace foo {
-  void fooHello() {
-    std::cout << "fooHello" << std::endl;
-  }
-
-	std::string Foo::operator()() const {
-	return "Foo";
+	void Foo::Hello(int level) {
+  std::cout << "[" << level << "] Enter Foo" << std::endl;
+  std::cout << "[" << level << "] Exit Foo" << std::endl;
 }
 }
 

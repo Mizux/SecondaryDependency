@@ -4,13 +4,11 @@
 #include <foo/Foo.hpp>
 
 namespace foobar {
-  void fooBarHello() {
-    std::cout << "fooBarHello" << std::endl;
-  }
 
-void FooBar::operator()() const {
-	foo::Foo foo;
-	std::cout << foo() << std::endl;
+void FooBar::Hello(int level) {
+  std::cout << "[" << level << "] Enter FooBar" << std::endl;
+	foo::Foo::Hello(level+1);
+  std::cout << "[" << level << "] Exit FooBar" << std::endl;
 }
 }
 
