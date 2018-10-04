@@ -4,6 +4,7 @@ LABEL maintainer="mizux.dev@gmail.com"
 # Base install
 RUN yum -y update \
 && yum -y groupinstall 'Development Tools' \
+&& yum -y install wget \
 && yum clean all \
 && rm -rf /var/cache/yum
 # Install CMake
