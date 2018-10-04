@@ -12,6 +12,12 @@ help:
 	@echo "  docker_<distro>: Build docker image for the specified <distro>."
 	@echo "  bash_<distro>: Run container using the docker_<distro> image."
 	@echo ""
+	@echo "  configure: Run 'cmake configure' for all distro"
+	@echo "  configure_<distro>: run 'cmake configure' for the specified <distro>."
+	@echo ""
+	@echo "  build: Run 'cmake build' for all distro"
+	@echo "  build_<distro>: run 'cmake build' for the specified <distro>."
+	@echo ""
 	@echo "  test: Run test for all distro."
 	@echo "  test_<distro>: Run test for the specified <distro>."
 	@echo ""
@@ -19,7 +25,6 @@ help:
 	@echo "  distclean: clean and also remove all docker images"
 	@echo ""
 	@echo "<distro>: alpine, centos-7, debian-9, ubuntu-latest, ubuntu-14.04, ubuntu-16.04, ubuntu-18.04"
-	@echo "<lang>: cpp, python, java, dotnet"
 	@echo ""
 	@echo "Options:"
 	@echo "  NOCACHE=1: use \"docker build --no-cache\""
@@ -38,7 +43,7 @@ $(info SHA1: $(SHA1))
 .PHONY: all
 all: build
 
-IMAGE := cmake-swig
+IMAGE := secondary-dependency
 
 # % stem in target and prerequisite
 # $* stem in rules
@@ -222,48 +227,6 @@ cache/%/test.log: cache/%/build.log
  -v ${PWD}:/project -w /project \
  ${IMAGE}_$*:devel \
  /bin/sh -c "cmake --build cache/$*/build --target test -- CTEST_OUTPUT_ON_FAILURE=1"
-	@date > $@
-
-###############
-##  INSTALL  ##
-###############
-.PHONY: install install_alpine install_ubuntu
-install: install_alpine install_ubuntu
-install_alpine: cache/alpine/install.log
-install_ubuntu: cache/ubuntu/install.log
-cache/%/install.log: cmake/docker/%/InstallDockerfile cache/%/build.log
-	${DOCKER_DEVEL_CMD} ${IMAGE}_$*:devel /bin/sh -c \
-		"cmake --build cache/$*/build --target install -- DESTDIR=install"
-	@docker image rm -f ${IMAGE}_$*:install 2>/dev/null
-	$(DOCKER_BUILD_CMD) -f $< -t ${IMAGE}_$*:install .
-	docker save ${IMAGE}_$*:install -o cache/$*/docker_install.tar
-	@date > $@
-
-###########################
-##  DOCKER BASH INSTALL  ##
-###########################
-.PHONY: bash_install_alpine bash_install_ubuntu
-bash_install_alpine: cache/alpine/install.log
-	@docker load -i cache/alpine/docker_install.tar
-	${DOCKER_INSTALL_CMD} ${IMAGE}_alpine:install /bin/sh
-bash_install_ubuntu: cache/ubuntu/install.log
-	@docker load -i cache/ubuntu/docker_install.tar
-	${DOCKER_INSTALL_CMD} ${IMAGE}_ubuntu:install /bin/bash
-
-####################
-##  TEST INSTALL  ##
-####################
-.PHONY: test_install test_install_alpine bash_isntall_ubuntu
-test_install: test_install_alpine test_install_ubuntu
-test_install_alpine: cache/alpine/test_install.log
-test_install_ubuntu: cache/ubuntu/test_install.log
-cache/%/test_install.log: cache/%/install.log cmake/sample
-	@docker load -i cache/$*/docker_install.tar
-	${DOCKER_INSTALL_CMD} ${IMAGE}_$*:install \
- /bin/sh -c "cmake -H. -B/cache; \
-cmake --build /cache; \
-cmake --build /cache --target test; \
-cmake --build /cache --target install"
 	@date > $@
 
 #############
