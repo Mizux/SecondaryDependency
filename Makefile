@@ -95,7 +95,7 @@ docker_ubuntu-18.04: cache/ubuntu-18.04/docker_devel.tar
 docker_ubuntu-16.04: cache/ubuntu-16.04/docker_devel.tar
 docker_ubuntu-14.04: cache/ubuntu-14.04/docker_devel.tar
 
-cache/%/docker_devel.tar: docker/%/Dockerfile | cache/%
+cache/%/docker_devel.tar: docker/%/Dockerfile Makefile | cache/%
 	-docker image rm -f ${IMAGE}_$*:devel 2>/dev/null
 	$(DOCKER_BUILD_CMD) -f $< -t ${IMAGE}_$*:devel docker/$*
 	docker save ${IMAGE}_$*:devel -o $@
@@ -153,12 +153,12 @@ configure_ubuntu-18.04: cache/ubuntu-18.04/configure.log
 configure_ubuntu-16.04: cache/ubuntu-16.04/configure.log
 configure_ubuntu-14.04: cache/ubuntu-14.04/configure.log
 
-cache/%/configure.log: cache/%/docker_devel.tar CMakeLists.txt */CMakeLists.txt
+cache/%/configure.log: cache/%/docker_devel.tar CMakeLists.txt */CMakeLists.txt Makefile
 	@docker load -i $<
 	${DOCKER_DEVEL_CMD} \
  -v ${PWD}:/project -w /project \
  ${IMAGE}_$*:devel \
- /bin/sh -c "cmake -H. -Bcache/$*/build"
+ /bin/sh -c "LDFLAGS=-v cmake -H. -Bcache/$*/build"
 	@date > $@
 
 #############
@@ -188,7 +188,7 @@ build_ubuntu-18.04: cache/ubuntu-18.04/build.log
 build_ubuntu-16.04: cache/ubuntu-16.04/build.log
 build_ubuntu-14.04: cache/ubuntu-14.04/build.log
 
-cache/%/build.log: cache/%/configure.log Foo FooBar FooBarApp
+cache/%/build.log: cache/%/configure.log Foo FooBar FooBarApp Makefile
 	${DOCKER_DEVEL_CMD} \
  -v ${PWD}:/project -w /project \
  ${IMAGE}_$*:devel \
