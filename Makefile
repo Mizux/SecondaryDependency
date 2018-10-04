@@ -153,7 +153,7 @@ configure_ubuntu-18.04: cache/ubuntu-18.04/configure.log
 configure_ubuntu-16.04: cache/ubuntu-16.04/configure.log
 configure_ubuntu-14.04: cache/ubuntu-14.04/configure.log
 
-cache/%/configure.log: cache/%/docker_devel.tar CMakeLists.txt cmake */CMakeLists.txt
+cache/%/configure.log: cache/%/docker_devel.tar CMakeLists.txt */CMakeLists.txt
 	@docker load -i $<
 	${DOCKER_DEVEL_CMD} \
  -v ${PWD}:/project -w /project \
@@ -188,7 +188,7 @@ build_ubuntu-18.04: cache/ubuntu-18.04/build.log
 build_ubuntu-16.04: cache/ubuntu-16.04/build.log
 build_ubuntu-14.04: cache/ubuntu-14.04/build.log
 
-cache/%/build.log: cache/%/configure.log Bar Foo FooBar FooBarApp
+cache/%/build.log: cache/%/configure.log Foo FooBar FooBarApp
 	${DOCKER_DEVEL_CMD} \
  -v ${PWD}:/project -w /project \
  ${IMAGE}_$*:devel \
