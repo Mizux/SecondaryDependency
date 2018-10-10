@@ -17,8 +17,6 @@ install: true
 before_script:
 - docker --version
 - make --version
-- uname -a
-- cat /etc/lsb-release
 
 script:
 - make docker_${DISTRO}
