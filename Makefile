@@ -50,11 +50,15 @@ IMAGE := secondary-dependency
 # $< first prerequist
 # $@ target name
 
+Makefile: ;
+docker/%/Dockerfile: ;
+
 cache:
 	mkdir cache
 
-# need docker/% to avoid stem matching <distro>/docker_devel.tar
-cache/%: | docker/% cache
+# need filter to avoid stem matching <distro>/docker_devel.tar
+filter = cache/alpine cache/centos-7 cache/debian-9 cache/ubuntu-latest cache/ubuntu-18.04 cache/ubuntu-16.04 cache/ubuntu-14.04
+$(filter): cache/%: | cache
 	mkdir cache/$*
 
 ##############
