@@ -6,6 +6,16 @@ set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 ```
+
+# Dependencies layout
+This CMake project is composed of two libraries (*Foo* and  *FooBar*) and one binary (*FooBarApp*)
+with the following dependencies:  
+```sh
+Foo:
+FooBar: PRIVATE Foo
+FooBarApp: PRIVATE FooBar
+```
+
 # Status
 Seems to work with `binutils >= 2.30` (alpine, debian-9, ubuntu-18.04) but can't found relevant information
 
