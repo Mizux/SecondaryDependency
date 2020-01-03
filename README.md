@@ -54,6 +54,29 @@ note: for older CMake you can use the hidden (i.e. undocumented) option `-H.` in
 # Status
 Seems to work with `binutils >= 2.30` (alpine, debian-9, ubuntu-18.04) but can't found relevant information
 
+```sh
+$ for i in build/bin/FooBarApp build/lib/*.so; do echo $i; objdump -p $i | grep "NEEDED\|RPATH"; done
+build/bin/FooBarApp
+  NEEDED               libFooBar.so
+  NEEDED               libstdc++.so.6
+  NEEDED               libm.so.6
+  NEEDED               libgcc_s.so.1
+  NEEDED               libc.so.6
+  RPATH                $ORIGIN/../lib
+build/lib/libFooBar.so
+  NEEDED               libFoo.so
+  NEEDED               libstdc++.so.6
+  NEEDED               libm.so.6
+  NEEDED               libgcc_s.so.1
+  NEEDED               libc.so.6
+  RPATH                $ORIGIN
+build/lib/libFoo.so
+  NEEDED               libstdc++.so.6
+  NEEDED               libm.so.6
+  NEEDED               libgcc_s.so.1
+  NEEDED               libc.so.6
+```
+
 Otherwise (centos-7 (**2.27.28**), ubuntu-14.04 (**2.24**), ubuntu-16.04 (**2.26.1**)) you have something like this:
 ```shell
 $ cmake -H. -Bbuild
