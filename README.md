@@ -16,6 +16,41 @@ FooBar: PRIVATE Foo
 FooBarApp: PRIVATE FooBar
 ```
 
+## Project directory layout
+Thus the project layout is as follow:
+```sh
+$ tree -I "build|docker"
+.
+├── CMakeLists.txt // meta CMake doing the orchestration
+├── Foo
+│   ├── CMakeLists.txt
+│   ├── include
+│   │   └── foo
+│   │       └── Foo.hpp
+│   └── src
+│       └── Foo.cpp
+├── FooBar
+│   ├── CMakeLists.txt
+│   ├── include
+│   │   └── foobar
+│   │       └── FooBar.hpp
+│   └── src
+│       └── FooBar.cpp
+└── FooBarApp
+    ├── CMakeLists.txt
+    └── src
+        └── main.cpp
+```
+
+# C++ Project Build
+To build the C++ project, as usual:
+```sh
+cmake -S. -Bbuild
+cmake --build build
+```
+
+note: for older CMake you can use the hidden (i.e. undocumented) option `-H.` instead of `-S.`
+
 # Status
 Seems to work with `binutils >= 2.30` (alpine, debian-9, ubuntu-18.04) but can't found relevant information
 
